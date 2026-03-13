@@ -41,11 +41,13 @@ git commit -m "$COMMIT_MSG"
 
 echo ""
 echo "3️⃣  推送到远程仓库..."
-# 尝试推送到 main 分支，如果失败则尝试 master
-if git push -u origin main 2>/dev/null; then
-    echo "✅ 已推送到 origin/main"
-elif git push -u origin master 2>/dev/null; then
-    echo "✅ 已推送到 origin/master"
+# 获取当前分支名
+CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+echo "当前分支: $CURRENT_BRANCH"
+
+# 推送到远程仓库
+if git push -u origin "$CURRENT_BRANCH" 2>&1; then
+    echo "✅ 已推送到 origin/$CURRENT_BRANCH"
 else
     echo "❌ 推送失败："
     echo "   可能原因:"
@@ -54,7 +56,7 @@ else
     echo "   3. 没有访问权限"
     echo ""
     echo "   请检查后重试："
-    echo "   git push -u origin main"
+    echo "   git push -u origin $CURRENT_BRANCH"
     exit 1
 fi
 
